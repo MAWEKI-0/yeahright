@@ -1,0 +1,11 @@
+Flask
+Flask-APScheduler
+praw
+vaderSentiment
+python-dotenv
+openai
+croniter
+pyyaml
+chromadb
+sentence-transformers
+requests

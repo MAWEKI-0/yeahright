@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <h1 class="title">Generate Genome from Prompt</h1>
+  <div class="content">
+    <p>
+      Use natural language to describe the goal of your Organism. The Genesis AI will attempt to translate your goal into a valid Genome.
+    </p>
+  </div>
+
+  <form method="post">
+    <div class="field">
+      <label class="label" for="prompt">Your Goal / Prompt</label>
+      <div class="control">
+        <textarea class="textarea" id="prompt" name="prompt" rows="4" placeholder="e.g., Find new python posts on reddit, analyze their sentiment, and post the positive ones to slack.">{{ user_prompt }}</textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-link" type="submit">Generate Genome</button>
+      </div>
+    </div>
+  </form>
+
+  {% if generated_genome %}
+    <div class="mt-5">
+      <h2 class="subtitle">Generated Genome</h2>
+      <div class="notification is-light">
+        <p>Copy the JSON below and use it to create a new Organism.</p>
+      </div>
+      <div class="field">
+        <div class="control">
+          <textarea class="textarea is-family-monospace" rows="20" readonly>{{ generated_genome }}</textarea>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

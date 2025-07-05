@@ -1,0 +1,76 @@
+{
+  "id": "test_organism_001",
+  "name": "Stateful News Analyzer",
+  "genes": [
+    {
+      "id": "fetch_programming_news",
+      "type": "FetchRedditPosts",
+      "config": {
+        "subreddit": "programming",
+        "limit": 10
+      },
+      "output_as": "programming_posts"
+    },
+    {
+      "id": "analyze_programming_sentiment",
+      "type": "AnalyzeSentiment",
+      "input_from": "programming_posts",
+      "output_as": "analyzed_programming_posts"
+    },
+    {
+      "id": "filter_positive_programming_posts",
+      "type": "FilterData",
+      "input_from": "analyzed_programming_posts",
+      "config": {
+        "field": "sentiment_score",
+        "condition": "greater_than",
+        "value": 0.5
+      },
+      "output_as": "positive_posts"
+    },
+    {
+        "id": "read_previously_seen_posts",
+        "type": "ReadFromMemory",
+        "config": {
+            "key": "seen_post_ids"
+        },
+        "output_as": "seen_posts_from_memory"
+    },
+    {
+        "id": "filter_out_seen_posts",
+        "type": "FilterData",
+        "input_from": "positive_posts",
+        "config": {
+            "field": "id",
+            "condition": "not_in",
+            "value_from_context": "seen_posts_from_memory"
+        },
+        "output_as": "new_positive_posts"
+    },
+    {
+      "id": "notify_slack_of_new_posts",
+      "type": "PostToSlack",
+      "input_from": "new_positive_posts",
+      "config": {
+        "webhook_url_env": "SLACK_WEBHOOK_URL"
+      }
+    },
+    {
+        "id": "get_ids_from_all_posts",
+        "type": "MergeData",
+        "config": {
+            "source_keys": ["positive_posts"],
+            "deduplicate_by_field": "id"
+        },
+        "output_as": "all_positive_post_ids"
+    },
+    {
+      "id": "remember_all_seen_posts",
+      "type": "WriteToMemory",
+      "input_from": "all_positive_post_ids",
+      "config": {
+        "key": "seen_post_ids"
+      }
+    }
+  ]
+}

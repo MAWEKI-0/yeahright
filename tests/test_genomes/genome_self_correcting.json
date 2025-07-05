@@ -1,0 +1,33 @@
+{
+  "organism_name": "self_corrector_01",
+  "genes": [
+    {
+      "id": "attempt_read",
+      "type": "ExecuteInRuntime",
+      "input_from": "initial_input"
+    },
+    {
+      "id": "check_for_failure",
+      "type": "ConditionalBranch",
+      "input_from": "attempt_read.stderr" 
+    },
+    {
+      "id": "save_error_to_memory",
+      "type": "SaveToVectorMemory",
+      "input_from": "check_for_failure.data",
+      "skip_if": "check_for_failure.condition_met == false"
+    },
+    {
+      "id": "create_missing_file",
+      "type": "ExecuteInRuntime",
+      "config": {"command": "echo 'content' > /tmp/missing_file.txt"},
+      "skip_if": "check_for_failure.condition_met == false"
+    },
+    {
+      "id": "retry_read",
+      "type": "ExecuteInRuntime",
+      "input_from": "initial_input",
+      "skip_if": "check_for_failure.condition_met == false"
+    }
+  ]
+}

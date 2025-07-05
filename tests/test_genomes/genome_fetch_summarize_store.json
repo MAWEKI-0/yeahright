@@ -1,0 +1,20 @@
+{
+  "name": "test_summarizer_organism",
+  "genes": [
+    {
+      "id": "fetch_step",
+      "type": "FetchArticle",
+      "input_from": "initial_input"
+    },
+    {
+      "id": "summarize_step",
+      "type": "SummarizeText",
+      "input_from": "fetch_step"
+    },
+    {
+      "id": "store_step",
+      "type": "StoreResult",
+      "input_from": "summarize_step"
+    }
+  ]
+}

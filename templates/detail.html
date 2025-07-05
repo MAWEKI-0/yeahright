@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+    </head>
+    <h2>{{ organism.name }}</h2>
+    <p><strong>ID:</strong> {{ organism.id }}</p>
+    <p><strong>Created:</strong> {{ organism.created_timestamp }}</p>
+    <p><strong>Last Run:</strong> {{ organism.last_run_timestamp }}</p>
+
+    <form action="{{ url_for('trigger_run', organism_id=organism.id) }}" method="post" class="mb-3">
+        <button type="submit" class="btn btn-primary">Run Organism</button>
+    </form>
+
+    <h3>Genome</h3>
+    <pre><code>{{ organism.genome_json | tojson(indent=4) }}</code></pre>
+
+    <h3>Run History</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Run ID</th>
+                <th>Status</th>
+                <th>Started At</th>
+                <th>Finished At</th>
+                <th>Log</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+                <tr>
+                    <td>{{ run.id }}</td>
+                    <td>{{ run.status }}</td>
+                    <td>{{ run.started_timestamp }}</td>
+                    <td>{{ run.finished_timestamp }}</td>
+                    <td><pre>{{ run.log_output }}</pre></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No runs yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

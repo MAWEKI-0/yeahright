@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h2>Organisms</h2>
+    <a href="{{ url_for('create') }}" class="btn btn-success mb-3">Create New Organism</a>
+    <ul class="list-group">
+        {% for organism in organisms %}
+            <li class="list-group-item">
+                <a href="{{ url_for('detail', organism_id=organism.id) }}">{{ organism.name }}</a>
+                <small class="text-muted">(ID: {{ organism.id }})</small>
+            </li>
+        {% else %}
+            <li class="list-group-item">No organisms found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
